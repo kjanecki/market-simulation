@@ -5,7 +5,7 @@ class Regal:
     self.quantity = quantity
 
     def takeProduct(self, productId):
-        for product in self.products
+        for product in self.products:
             if product.name == productId:
                 product.decrementQuantity()
                 self.decrementQuantity()
