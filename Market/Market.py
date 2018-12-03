@@ -1,4 +1,4 @@
-class Shop:
+class Market:
 
     def __init__(self, articles, regals, cashRegisters):
         self.articles = articles

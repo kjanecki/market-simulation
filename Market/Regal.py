@@ -1,4 +1,3 @@
-
 class Regal:
 
     def __init__(self, number, location, products=None, quantity=0):

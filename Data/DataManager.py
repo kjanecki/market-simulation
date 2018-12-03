@@ -1,15 +1,11 @@
 from DataReader import DataReader
 from DataWriter import DataWriter
 
-class DataManager:
-    def __init__(self):
-        self.DataReader = DataReader()
-        self.DataWriter = DataWriter()
+class DataManger: 
+    @staticmethod
+    def initialize_market():
+        return DataReader().initialize_market(('./examples/products.xlsx'))
 
     @staticmethod
-    def read(self):
-        self.DataReader.read('./products.xml')
-
-    @staticmethod
-    def write(self, data):
-        self.DataWriter.write('./result.txt', data)
+    def save_results(results):
+        DataWriter().save_results('./examples/result.txt', results)
