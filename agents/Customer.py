@@ -9,7 +9,7 @@ class Customer(Agent):
         super().__init__(unique_id, model)
         self.articles = articles
         self.shopping_list = generate_shopping_list(articles)
-        self.x = 0
+        self.x = model.grid.width//2 + 1
         self.y = 0
         self.step_queue = []
 
@@ -35,4 +35,4 @@ class Customer(Agent):
 
 
 def generate_shopping_list(articles):
-    return random.sample(range(len(list(articles.keys()))), random.randint(5, 10))
+    return random.sample(range(len(list(articles.keys()))), random.randint(3, 15))

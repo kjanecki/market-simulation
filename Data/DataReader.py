@@ -13,4 +13,3 @@ class DataReader:
 
             for j in range(sh.ncols):
                 product.setValue([colName[j]](sh.cell_value(rowx=i, colx=j)))
-            
