@@ -1,5 +1,5 @@
 # model2.py
-
+import numpy as np
 from mesa import Model
 from mesa.time import RandomActivation
 from mesa.space import MultiGrid
@@ -21,6 +21,7 @@ class MarketModel(Model):
         self.regal_agents = []
         self.checkout_agents = []
         self.opened_checkouts = []
+        self.space_graph = np.zeros((width, height))
 
         self.place_checkouts()
         self.place_regals()
@@ -46,10 +47,11 @@ class MarketModel(Model):
     def place_regals(self):
         for i in range(len(self.shop.regals.keys())):
             shelf_agent = RegalAgent(self.agents_number, self, list(self.shop.regals.values())[i])
+            pos = shelf_agent.get_location()
             self.agents_number += 1
-            self.grid.place_agent(shelf_agent, shelf_agent.get_location())
+            self.grid.place_agent(shelf_agent, pos)
             self.regal_agents.append(shelf_agent)
-
+            self.space_graph[pos[0], pos[1]] = 1
 
     def open_checkout(self, n):
         if n > len(self.checkout_agents):

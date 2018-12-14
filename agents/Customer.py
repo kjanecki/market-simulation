@@ -8,15 +8,18 @@ class Customer(Agent):
     def __init__(self, unique_id, model, articles):
         super().__init__(unique_id, model)
         self.articles = articles
-        self.shopping_list = generate_shopping_list(articles)
+        self.products_number = random.randint(1, 3)
         self.x = model.grid.width//2 + 1
         self.y = 0
         self.step_queue = []
-        self.products_number = 0
         self.is_waiting = False
         self.pos = (self.x, self.y)
+        self.shopping_list = generate_shopping_list(articles, self.products_number)
 
     def step(self):
+        # if self.is_checked_up():
+        #     return
+
         if len(self.step_queue) != 0:
             self.move()
         elif len(self.shopping_list) > 0:
@@ -40,6 +43,7 @@ class Customer(Agent):
 
     def is_checked_up(self):
         if self.products_number <= 0:
+            self.finish_shopping()
             return True
         return False
 
@@ -52,8 +56,8 @@ class Customer(Agent):
 
     def finish_shopping(self):
         self.pos = (self.x, self.y)
-        self.model.schedule.remove(self)
-        self.model.grid.remove_agent(self)
+        self.model.grid[self.x][self.y].remove(self)
 
-def generate_shopping_list(articles):
-    return random.sample(range(len(list(articles.keys()))), random.randint(1, 20))
+
+def generate_shopping_list(articles, number):
+    return random.sample(range(len(list(articles.keys()))), number)

@@ -66,7 +66,7 @@ def agent_portrayal(agent):
                      "r": 0.5}
 
         if agent.is_checked_up():
-            portrayal["Color"] = "gray"
+            portrayal["Color"] = "white"
     return portrayal
 
 
