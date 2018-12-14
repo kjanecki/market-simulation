@@ -13,12 +13,13 @@ class Customer(Agent):
         self.y = 0
         self.step_queue = []
         self.is_waiting = False
+        self.is_checked = False
         self.pos = (self.x, self.y)
         self.shopping_list = generate_shopping_list(articles, self.products_number)
 
     def step(self):
-        # if self.is_checked_up():
-        #     return
+        if self.is_checked:
+            return
 
         if len(self.step_queue) != 0:
             self.move()
@@ -41,14 +42,10 @@ class Customer(Agent):
     def attempt_to_buy_products(self):
         pass
 
-    def is_checked_up(self):
-        if self.products_number <= 0:
-            self.finish_shopping()
-            return True
-        return False
-
     def check_up_products(self, n):
         self.products_number -= n
+        if self.products_number <= 0:
+            self.finish_shopping()
 
     def step_forward(self):
         p = (self.x+1, self.y)
@@ -56,7 +53,9 @@ class Customer(Agent):
 
     def finish_shopping(self):
         self.pos = (self.x, self.y)
-        self.model.grid[self.x][self.y].remove(self)
+        if not self.is_checked:
+            # self.model.grid[self.x][self.y].remove(self)
+            self.is_checked = True
 
 
 def generate_shopping_list(articles, number):

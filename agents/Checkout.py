@@ -21,7 +21,7 @@ class Checkout(Agent):
     def serve_customer(self):
         if self.is_serving:
             self.served_agent.check_up_products(1)
-            if self.served_agent.is_checked_up():
+            if self.served_agent.is_checked:
                 # self.served_agent.finish_shopping()
                 self.queue_end_location = (self.queue_end_location[0] + 1, self.queue_end_location[1])
                 self.is_serving = False
