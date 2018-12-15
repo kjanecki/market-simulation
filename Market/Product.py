@@ -7,18 +7,21 @@ class Product:
         self.regal = regal
         self.price = price
 
-        def setValue():
-            return {
-                'name': setName,
-                'regal': setRegal,
-                'price': setPrice
-            }
+    def setValue(self):
+        return {
+            'name': self.setName,
+            'regal': self.setRegal,
+            'price': self.setPrice
+        }
 
-        def setName(value):
-            self.name = value
+    def setName(self, value):
+        self.name = value
 
-        def setRegal(value):
-            self.regal = value
+    def setRegal(self, value):
+        self.regal = value
 
-        def setPrice(value):
-            self.price = value
+    def setPrice(self, value):
+        self.price = value
+
+    def __str__(self):
+        return "Name: %s, Regal: %d, Price: %f" % (self.name, self.regal, self.price)

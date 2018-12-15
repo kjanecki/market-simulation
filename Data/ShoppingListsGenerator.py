@@ -40,7 +40,9 @@ class ShoppingListGenerator:
             product = Product()
 
             for j in range(sh.ncols):
-                product.setValue(col_name[j])(sh.cell_value(rowx=i, colx=j))
+                func_map = product.setValue()
+                cell_val = sh.cell_value(i, j)
+                func_map[col_name[j]](float(cell_val) if col_name[j] != 'name' else cell_val)
             
             products.append(product)
 
