@@ -1,5 +1,6 @@
 import random
 
+from Data.ShoppingListsGenerator import ShoppingListGenerator
 from agents.Customer import Customer
 from agents.pathfinding import compute_astar_shortest_path
 
@@ -7,19 +8,12 @@ from agents.pathfinding import compute_astar_shortest_path
 class CommonCustomer(Customer):
 
     def __init__(self, unique_id, model, articles):
-        super().__init__(unique_id, model, articles)
+        super().__init__(unique_id, model, articles, ShoppingListGenerator())
         self.next_article = ()
         self.is_near_checkouts = False
         self.checkout_agent = None
 
-    def find_path(self):
-        next_article_location = self.model.shop.regals[str(self.articles[str(self.shopping_list.pop(0))])].location
-
-        i = 1
-        if next_article_location[1] % 2 != 0:
-            i = -1
-
-        target_point = (next_article_location[0], next_article_location[1] + i)
+    def find_path(self, target_point):
         self.step_queue = compute_astar_shortest_path(self.model.space_graph, (self.x, self.y), target_point)
 
     def compute_rectlinear_path(self, p1, p2):

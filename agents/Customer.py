@@ -5,7 +5,7 @@ from mesa import Agent
 
 class Customer(Agent):
 
-    def __init__(self, unique_id, model, articles):
+    def __init__(self, unique_id, model, articles, shopping_list_generator):
         super().__init__(unique_id, model)
         self.articles = articles
         self.products_number = random.randint(1, 3)
@@ -15,7 +15,9 @@ class Customer(Agent):
         self.is_waiting = False
         self.is_checked = False
         self.pos = (self.x, self.y)
-        self.shopping_list = generate_shopping_list(articles, self.products_number)
+        # self.shopping_list = generate_shopping_list(articles, self.products_number)
+
+        self.shopping_list = shopping_list_generator.generate_shopping_list(self.model.market.articles)
 
     def step(self):
         if self.is_checked:
@@ -24,7 +26,9 @@ class Customer(Agent):
         if len(self.step_queue) != 0:
             self.move()
         elif len(self.shopping_list) > 0:
-                self.find_path()
+                next_product_position = self.find_product_position(self.shopping_list.pop(0))
+                print(next_product_position)
+                self.find_path(next_product_position)
                 self.products_number += 1
                 self.move()
         elif self.is_waiting and self.model.grid.width > self.x+1:
@@ -33,7 +37,10 @@ class Customer(Agent):
         else:
             self.attempt_to_buy_products()
 
-    def find_path(self):
+    def find_product_position(self, product):
+        return self.model.market.get_product_position(product)
+
+    def find_path(self, next_product_position):
         pass
 
     def move(self):
@@ -56,6 +63,7 @@ class Customer(Agent):
         if not self.is_checked:
             # self.model.grid[self.x][self.y].remove(self)
             self.is_checked = True
+
 
 
 def generate_shopping_list(articles, number):

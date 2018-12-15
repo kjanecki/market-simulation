@@ -3,34 +3,43 @@ from Market.Product import Product
 from Market.Regal import Regal
 from Market.Market import Market
 
+
 class DataReader:
 
-    def initialize_market(self, path):
+    def initialize_market(self, path, products_number=200, regals_number=14, regal_size=(15, 2)):
         book = xlrd.open_workbook(path)
         sh = book.sheet_by_index(0)
         col_name = ['name', 'regal', 'price']
         products = []
-        regals = []
-        
-      
-        for i in range(1, 10):
+        regals = self.initialize_regal_list(regals_number, regal_size)
+
+        for i in range(1, products_number):
             product = Product()
             for j in range(sh.ncols):
                 func_map = product.setValue()
                 cell_val = sh.cell_value(i, j)
                 func_map[col_name[j]](float(cell_val) if col_name[j] != 'name' else cell_val)
-            products.append(product)
 
             added = False
-            (lastX, lastY) = (0, 0)
             for regal in regals:
-                if(regal.number == product.regal):
-                    regal.products.append(product)
-                    regal.quantity += product.quantity
+                if regal.number == product.regal:
+                    regal.add_product(product)
                     added = True
-                (lastX, lastY) = regal.location
-            # TODO: Implement adding new regal position???
-            if(added == None):
-                regals.append(Regal(product.regal, (lastX + 5, lastY + 4), [product], product.quantity))
-        
-        return Market(products, regals, None)
+
+            if added:
+                products.append(product)
+
+        checkouts = []
+        for i in range(4, 48, 3):
+            checkouts.append((50 - 1, i))
+
+        return Market(products, regals, checkouts)
+
+    def initialize_regal_list(self, regals_number, regal_size):
+        regals = []
+        locations = [(5, 7), (5, 13), (5, 19), (5, 25), (5, 31), (5, 37), (5, 43),
+                     (30, 7), (30, 13), (30, 19), (30, 25), (30, 31), (30, 37), (30, 43)]
+
+        for i in range(regals_number):
+            regals.append(Regal(i+1, locations[i], regal_size))
+        return regals

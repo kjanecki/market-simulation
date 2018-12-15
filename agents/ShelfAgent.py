@@ -3,9 +3,9 @@ from agents.PassiveAgent import PassiveAgent
 
 class ShelfAgent(PassiveAgent):
 
-    def __init__(self, unique_id, model, regal):
+    def __init__(self, unique_id, model, shelf):
         super().__init__(unique_id, model)
-        self.regal = regal
+        self.shelf = shelf
 
     def get_location(self):
-        return self.regal.location
+        return self.shelf.location

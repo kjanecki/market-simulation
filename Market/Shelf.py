@@ -1,7 +1,7 @@
 
 class Shelf:
 
-    def __init__(self, number, location, products=None, quantity=0):
+    def __init__(self, number, location, products=None, quantity=0, direction=''):
         if products is None:
             products = []
 
@@ -9,6 +9,7 @@ class Shelf:
         self.location = location
         self.products = products
         self.quantity = quantity
+        self.direction = direction
 
     def take_product(self, product_id):
         for product in self.products:

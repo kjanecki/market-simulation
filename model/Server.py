@@ -3,8 +3,9 @@ import random
 from mesa.visualization.modules import CanvasGrid
 from mesa.visualization.ModularVisualization import ModularServer
 
-from Shop.Shop import Shop
-from Shop.Shelf import Shelf
+from Data.DataManager import DataManager
+from Market.Market import Market
+from Market.Shelf import Shelf
 from agents.Checkout import Checkout
 from agents.ShelfAgent import ShelfAgent
 from model.MarketModel import MarketModel
@@ -37,7 +38,8 @@ checkouts = []
 for i in range(4, 48, 3):
     checkouts.append((width-1, i))
 
-shop = Shop(article_dictionary, regals, checkouts)
+market = DataManager.initialize_market()
+# market = Market(article_dictionary, regals, checkouts)
 
 
 def agent_portrayal(agent):
@@ -75,4 +77,4 @@ grid = CanvasGrid(agent_portrayal, width, height, width*10, height*10)
 server = ModularServer(MarketModel,
                        [grid],
                        "Money Model",
-                       {"agents_number": 50, "width": width, "height": height, "shop": shop})
+                       {"agents_number": 50, "width": width, "height": height, "market": market})
