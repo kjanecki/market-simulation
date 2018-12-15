@@ -65,7 +65,7 @@ def agent_portrayal(agent):
                      "Layer": 0,
                      "r": 0.5}
 
-        if agent.is_checked_up():
+        if agent.is_checked:
             portrayal["Color"] = "white"
     return portrayal
 
