@@ -7,7 +7,7 @@ class ShoppingListGenerator:
         products = self._get_products()
         shopping_lists = []
 
-        for i in range(1, 50):
+        for i in range(1, 100):
             shopping_lists.append(self._generate_shopping_list(products))
 
         return shopping_lists
@@ -24,7 +24,7 @@ class ShoppingListGenerator:
         return shopping_list
 
     def _get_list_item(self, products):
-        list_item = {'id': -1, 'price': 0}
+        list_item = {'id': 0, 'price': 0}
         product = products[randint(0, len(products)-1)]
         list_item['id'] = product.id
         list_item['price'] = product.price
