@@ -6,7 +6,7 @@ from mesa.space import MultiGrid
 
 from agents.Checkout import Checkout
 from agents.CommonCustomer import CommonCustomer
-from agents.RegalAgent import RegalAgent
+from agents.ShelfAgent import ShelfAgent
 
 
 class MarketModel(Model):
@@ -46,7 +46,7 @@ class MarketModel(Model):
 
     def place_regals(self):
         for i in range(len(self.shop.regals.keys())):
-            shelf_agent = RegalAgent(self.agents_number, self, list(self.shop.regals.values())[i])
+            shelf_agent = ShelfAgent(self.agents_number, self, list(self.shop.regals.values())[i])
             pos = shelf_agent.get_location()
             self.agents_number += 1
             self.grid.place_agent(shelf_agent, pos)

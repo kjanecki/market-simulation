@@ -4,9 +4,9 @@ from mesa.visualization.modules import CanvasGrid
 from mesa.visualization.ModularVisualization import ModularServer
 
 from Shop.Shop import Shop
-from Shop.Regal import Regal
+from Shop.Shelf import Shelf
 from agents.Checkout import Checkout
-from agents.RegalAgent import RegalAgent
+from agents.ShelfAgent import ShelfAgent
 from model.MarketModel import MarketModel
 
 article_dictionary = {}
@@ -19,15 +19,15 @@ regal_no = 0
 
 for j in range(8, 50, 6):
     for i in range(5, 20):
-        regals[str(regal_no)] = Regal(regal_no, (i, j))
+        regals[str(regal_no)] = Shelf(regal_no, (i, j))
         regal_no += 1
-        regals[str(regal_no)] = Regal(regal_no, (i, j-1))
+        regals[str(regal_no)] = Shelf(regal_no, (i, j - 1))
         regal_no += 1
 
     for i in range(30, 45):
-        regals[str(regal_no)] = Regal(regal_no, (i, j))
+        regals[str(regal_no)] = Shelf(regal_no, (i, j))
         regal_no += 1
-        regals[str(regal_no)] = Regal(regal_no, (i, j-1))
+        regals[str(regal_no)] = Shelf(regal_no, (i, j - 1))
         regal_no += 1
 
 for i in range(100):
@@ -41,7 +41,7 @@ shop = Shop(article_dictionary, regals, checkouts)
 
 
 def agent_portrayal(agent):
-    if type(agent) is RegalAgent:
+    if type(agent) is ShelfAgent:
         portrayal = {"Shape": "rect",
                      "Color": "blue",
                      "Filled": "true",

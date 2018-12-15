@@ -1,5 +1,5 @@
 
-class Regal:
+class Shelf:
 
     def __init__(self, number, location, products=None, quantity=0):
         if products is None:
