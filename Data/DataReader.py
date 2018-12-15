@@ -8,7 +8,7 @@ class DataReader:
     def initialize_market(self, path):
         book = xlrd.open_workbook(path)
         sh = book.sheet_by_index(0)
-        col_name = ['name', 'kind', 'regal', 'price', 'discount', 'quantity']
+        col_name = ['name', 'regal', 'price']
         products = []
         regals = []
         
