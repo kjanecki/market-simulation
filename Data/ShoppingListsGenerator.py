@@ -15,7 +15,7 @@ class ShoppingListGenerator:
     def generate_shopping_list(self, products):
         shopping_list = []
         money_limit = 1000
-        number_of_items = randint(2, len(products)-1)
+        number_of_items = randint(2, 10)
         for i in range(0, number_of_items):
 
             list_item = products[randint(0, len(products)-1)]

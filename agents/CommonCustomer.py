@@ -16,22 +16,11 @@ class CommonCustomer(Customer):
     def find_path(self, target_point):
         self.step_queue = compute_astar_shortest_path(self.model.space_graph, (self.x, self.y), target_point)
 
-    def compute_rectlinear_path(self, p1, p2):
-        x, y = p1[0], p1[1]
-
-        i = 1
-        if y > p2[1]:
-            i = -1
-        while y != p2[1]:
-            y += i
-            self.step_queue.append((x, y))
-
-        i = 1
-        if x > p2[0]:
-            i = -1
-        while x != p2[0]:
-            x += i
-            self.step_queue.append((x, y))
+    def find_path_async(self, next_product_position):
+        self.result_async = self.thread_pool.apply_async(compute_astar_shortest_path,
+                                                         (self.model.space_graph, (self.x, self.y),
+                                                          next_product_position))
+        self.is_waiting_for_path = True
 
     def move(self):
         next_step = self.step_queue.pop(0)
@@ -40,12 +29,12 @@ class CommonCustomer(Customer):
 
     def attempt_to_buy_products(self):
         if not self.is_near_checkouts:
-            self.compute_rectlinear_path((self.x, self.y), (self.model.grid.width-3, self.y))
+            self.find_path((self.model.grid.width-3, self.y))
             self.is_near_checkouts = True
         elif self.checkout_agent is None:
             self.checkout_agent = self.model.find_nearest_checkout((self.x, self.y))
-            self.compute_rectlinear_path((self.x, self.y), (self.x, self.checkout_agent.location[1]))
+            self.find_path((self.x, self.checkout_agent.location[1]))
         else:
             pos = self.checkout_agent.stand_in_the_queue(self)
-            self.compute_rectlinear_path((self.x, self.y), pos)
+            self.find_path(pos)
             self.is_waiting = True

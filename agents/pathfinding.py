@@ -59,9 +59,6 @@ def compute_astar_shortest_path(graph, start_pos, end_pos):
             neighbor.f = neighbor.g + neighbor.h
 
             if neighbor in open_list:
-                # for open_node in open_list:
-                #     if neighbor == open_node and neighbor.g > open_node.g:
-                #         continue
                 continue
 
             bisect.insort(open_list, neighbor)

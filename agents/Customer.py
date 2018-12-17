@@ -1,6 +1,9 @@
 import random
+from multiprocessing.pool import ThreadPool
 
 from mesa import Agent
+
+from agents.pathfinding import compute_astar_shortest_path
 
 
 class Customer(Agent):
@@ -15,22 +18,28 @@ class Customer(Agent):
         self.is_waiting = False
         self.is_checked = False
         self.pos = (self.x, self.y)
-        # self.shopping_list = generate_shopping_list(articles, self.products_number)
-
+        self.thread_pool = ThreadPool(1)  # TODO: Inject thread pool from model
+        self.result_async = None
+        self.is_waiting_for_path = False
         self.shopping_list = shopping_list_generator.generate_shopping_list(self.model.market.articles)
 
     def step(self):
         if self.is_checked:
             return
+        if self.is_waiting_for_path:
+            if self.result_async.ready():
+                self.step_queue = self.result_async.get()
+                self.is_waiting_for_path = False
+            else:
+                return
 
         if len(self.step_queue) != 0:
             self.move()
         elif len(self.shopping_list) > 0:
                 next_product_position = self.find_product_position(self.shopping_list.pop(0))
-                print(next_product_position)
-                self.find_path(next_product_position)
+                self.find_path_async(next_product_position)
                 self.products_number += 1
-                self.move()
+
         elif self.is_waiting and self.model.grid.width > self.x+1:
             if self.model.grid.is_cell_empty((self.x+1, self.y)):
                 self.step_forward()
@@ -39,6 +48,9 @@ class Customer(Agent):
 
     def find_product_position(self, product):
         return self.model.market.get_product_position(product)
+
+    def find_path_async(self, next_product_position):
+        pass
 
     def find_path(self, next_product_position):
         pass
@@ -63,8 +75,3 @@ class Customer(Agent):
         if not self.is_checked:
             # self.model.grid[self.x][self.y].remove(self)
             self.is_checked = True
-
-
-
-def generate_shopping_list(articles, number):
-    return random.sample(range(len(list(articles.keys()))), number)

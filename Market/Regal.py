@@ -22,9 +22,6 @@ class Regal:
                     direction = 'N'
                 self.shelf_list.append(Shelf(index, (self.location[0]+i, self.location[1]+j), direction=direction))
                 index += 1
-                print(direction, end=" ")
-            print()
-        print()
 
     def add_product(self, product):
         self.product_shelf_map[product.id] = self.next_shelf_index
