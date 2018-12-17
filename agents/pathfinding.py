@@ -55,17 +55,26 @@ def compute_astar_shortest_path(graph, start_pos, end_pos):
                 continue
 
             neighbor.g = current_node.g + 1
-            neighbor.h = ((neighbor.position[0] - end_node.position[0]) ** 2) + (
-                        (neighbor.position[1] - end_node.position[1]) ** 2)
+            neighbor.h = manhattan_distance_heuristic(current_node.position, end_pos)
             neighbor.f = neighbor.g + neighbor.h
 
             if neighbor in open_list:
-                for open_node in open_list:
-                    if neighbor == open_node and neighbor.g > open_node.g:
-                        continue
+                # for open_node in open_list:
+                #     if neighbor == open_node and neighbor.g > open_node.g:
+                #         continue
                 continue
 
             bisect.insort(open_list, neighbor)
+
+
+def distance_heuristic(current_pos, goal_pos):
+    return ((current_pos[0] - goal_pos[0]) ** 2) + ((current_pos[1] - goal_pos[1]) ** 2)
+
+
+def manhattan_distance_heuristic(current_pos, goal_pos):
+    dx = abs(current_pos[0] - goal_pos[0])
+    dy = abs(current_pos[1] - goal_pos[1])
+    return dx + dy
 
 
 def back_propagate_path(current_node):
@@ -80,7 +89,7 @@ def back_propagate_path(current_node):
 def compute_neighborhood(graph, current_node):
     central_point = current_node.position
     neighbors = []
-    for step in [(0, -1), (0, 1), (-1, 0), (1, 0)]:
+    for step in [(0, -1), (0, 1), (-1, 0), (1, 0), (1, 1), (-1, -1), (-1, 1), (1, -1)]:
         new_position = (central_point[0]+step[0], central_point[1]+step[1])
         if is_in_range(new_position, graph):
             if graph[new_position] != 1:
