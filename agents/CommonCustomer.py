@@ -17,9 +17,14 @@ class CommonCustomer(Customer):
         self.step_queue = compute_astar_shortest_path(self.model.space_graph, (self.x, self.y), target_point)
 
     def find_path_async(self, next_product_position):
+        h = 'distance'
+        if random.randint(0, 2) == 1:
+            h = 'manhattan'
+
         self.result_async = self.thread_pool.apply_async(compute_astar_shortest_path,
                                                          (self.model.space_graph, (self.x, self.y),
-                                                          next_product_position))
+                                                          next_product_position,
+                                                          h))
         self.is_waiting_for_path = True
 
     def move(self):
@@ -27,16 +32,24 @@ class CommonCustomer(Customer):
         self.pos = (self.x, self.y)
         self.x, self.y = next_step[0], next_step[1]
         self.model.move_agent(self, (self.x, self.y))
-        # self.model.grid.move_agent(self, (self.x, self.y))
 
     def attempt_to_buy_products(self):
         if not self.is_near_checkouts:
             self.find_path((self.model.grid.width-3, self.y))
             self.is_near_checkouts = True
         elif self.checkout_agent is None:
-            self.checkout_agent = self.model.find_nearest_checkout((self.x, self.y))
+            self.choose_checkout(self.model.find_nearest_checkouts((self.x, self.y), 3), 3)
             self.find_path((self.x, self.checkout_agent.location[1]))
         else:
             pos = self.checkout_agent.stand_in_the_queue(self)
             self.find_path(pos)
             self.is_waiting = True
+
+    def choose_checkout(self, checkouts, threshold):
+        chosen_checkout = checkouts[0]
+        for checkout in checkouts[1:len(checkouts)]:
+            if len(checkout.queue) + threshold < len(chosen_checkout.queue):
+                chosen_checkout = checkout
+
+        self.checkout_agent = chosen_checkout
+

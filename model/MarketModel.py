@@ -29,7 +29,7 @@ class MarketModel(Model):
         self.place_checkouts()
         self.place_regals()
 
-        for i in range(1, 4, 2):
+        for i in range(3, 12, 4):
             self.open_checkout(i)
             self.opened_checkouts.append(self.checkout_agents[i])
 
@@ -69,16 +69,12 @@ class MarketModel(Model):
             self.checkout_agents[n].open()
             self.schedule.add(self.checkout_agents[n])
 
-    def find_nearest_checkout(self, location):
-
-        min_checkout = self.opened_checkouts[0]
-        min_height_distance = abs(location[1] - min_checkout.location[1])
-        for i in self.opened_checkouts:
-            height_distance = abs(location[1] - i.location[1])
-            if height_distance < min_height_distance:
-                min_height_distance = height_distance
-                min_checkout = i
-        return min_checkout
+    def find_nearest_checkouts(self, location, n):
+        new_list = self.opened_checkouts.copy()
+        ordered_list = sorted(new_list, key=(lambda x:
+                                             ((x.location[0] - location[0]) ** 2) +
+                                             ((x.location[1] - location[1]) ** 2)))
+        return ordered_list[0:]
 
     def step(self):
 
@@ -94,10 +90,10 @@ class MarketModel(Model):
         # self.grid_mutex.release()
 
     def remove_agent(self, agent):
-        self.grid_mutex.acquire()
+        # self.grid_mutex.acquire()
         self.grid.remove_agent(agent)
         self.schedule.remove(agent)
-        self.grid_mutex.release()
+        # self.grid_mutex.release()
 
 
 
