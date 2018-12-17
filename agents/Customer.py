@@ -30,8 +30,7 @@ class Customer(Agent):
             if self.result_async.ready():
                 self.step_queue = self.result_async.get()
                 self.is_waiting_for_path = False
-            else:
-                return
+            return
 
         if len(self.step_queue) != 0:
             self.move()
@@ -40,9 +39,8 @@ class Customer(Agent):
                 self.find_path_async(next_product_position)
                 self.products_number += 1
 
-        elif self.is_waiting and self.model.grid.width > self.x+1:
-            if self.model.grid.is_cell_empty((self.x+1, self.y)):
-                self.step_forward()
+        elif self.is_waiting:
+            return
         else:
             self.attempt_to_buy_products()
 
@@ -67,11 +65,11 @@ class Customer(Agent):
             self.finish_shopping()
 
     def step_forward(self):
-        p = (self.x+1, self.y)
-        self.model.grid.move_agent(self, p)
+        self.pos = (self.x, self.y)
+        self.x = self.x + 1
+        self.model.move_agent(self, (self.x, self.y))
 
     def finish_shopping(self):
-        self.pos = (self.x, self.y)
         if not self.is_checked:
-            # self.model.grid[self.x][self.y].remove(self)
+            self.model.remove_agent(self)
             self.is_checked = True

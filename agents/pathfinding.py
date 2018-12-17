@@ -21,7 +21,11 @@ class Node:
         return self.f < other.f
 
 
-def compute_astar_shortest_path(graph, start_pos, end_pos):
+def compute_astar_shortest_path(graph, start_pos, end_pos, heurestic='distance'):
+
+    hfun = distance_heuristic
+    if heurestic == 'manhattan':
+        hfun = manhattan_distance_heuristic
 
     start_node = Node(None, start_pos)
     end_node = Node(None, end_pos)
@@ -55,13 +59,16 @@ def compute_astar_shortest_path(graph, start_pos, end_pos):
                 continue
 
             neighbor.g = current_node.g + 1
-            neighbor.h = manhattan_distance_heuristic(current_node.position, end_pos)
+            neighbor.h = hfun(current_node.position, end_pos)
             neighbor.f = neighbor.g + neighbor.h
 
             if neighbor in open_list:
                 continue
 
             bisect.insort(open_list, neighbor)
+
+    print(start_pos, end_pos)
+    return []
 
 
 def distance_heuristic(current_pos, goal_pos):

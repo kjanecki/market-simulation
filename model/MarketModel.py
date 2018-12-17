@@ -1,10 +1,12 @@
 # model2.py
+import random
+from multiprocessing import Lock
+
 import numpy as np
 from mesa import Model
 from mesa.time import RandomActivation
 from mesa.space import MultiGrid
 
-from Data.ShoppingListsGenerator import ShoppingListGenerator
 from agents.Checkout import Checkout
 from agents.CommonCustomer import CommonCustomer
 from agents.ShelfAgent import ShelfAgent
@@ -12,12 +14,13 @@ from agents.ShelfAgent import ShelfAgent
 
 class MarketModel(Model):
 
-    def __init__(self, agents_number, market, width=50, height=50):
+    def __init__(self, max_agents_number, market, width=50, height=50):
         self.running = True
         self.market = market
-        self.num_agents = agents_number
+        self.num_agents = max_agents_number
         self.schedule = RandomActivation(self)
         self.grid = MultiGrid(width, height, True)
+        self.grid_mutex = Lock()
         self.agents_number = 1
         self.regal_agents = []
         self.checkout_agents = []
@@ -26,16 +29,15 @@ class MarketModel(Model):
         self.place_checkouts()
         self.place_regals()
 
-        self.agents_number += 1
-        for i in range(self.num_agents):
-            a = CommonCustomer(self.agents_number, self, self.market.articles)
-            self.agents_number += 1
-            self.schedule.add(a)
-            self.grid.place_agent(a, (a.x, a.y))
-
         for i in range(1, 4, 2):
             self.open_checkout(i)
             self.opened_checkouts.append(self.checkout_agents[i])
+
+    def add_agent(self):
+        a = CommonCustomer(self.agents_number, self, self.market.articles)
+        self.agents_number += 1
+        self.schedule.add(a)
+        self.grid.place_agent(a, (a.x, a.y))
 
     def place_checkouts(self):
         for checkout_location in self.market.cashRegisters:
@@ -76,12 +78,26 @@ class MarketModel(Model):
             if height_distance < min_height_distance:
                 min_height_distance = height_distance
                 min_checkout = i
-
         return min_checkout
 
     def step(self):
+
+        if len(self.schedule.agents) < self.num_agents:
+            for i in range(random.randint(0, 3)):
+                self.add_agent()
+
         self.schedule.step()
 
+    def move_agent(self, agent, new_pos):
+        # self.grid_mutex.acquire()
+        self.grid.move_agent(agent, new_pos)
+        # self.grid_mutex.release()
+
+    def remove_agent(self, agent):
+        self.grid_mutex.acquire()
+        self.grid.remove_agent(agent)
+        self.schedule.remove(agent)
+        self.grid_mutex.release()
 
 
 
