@@ -11,17 +11,18 @@ class Customer(Agent):
     def __init__(self, unique_id, model, articles, shopping_list_generator):
         super().__init__(unique_id, model)
         self.articles = articles
-        self.products_number = random.randint(1, 3)
         self.x = model.grid.width//2 + 1
         self.y = 0
         self.step_queue = []
         self.is_waiting = False
         self.is_checked = False
         self.pos = (self.x, self.y)
-        self.thread_pool = ThreadPool(1)  # TODO: Inject thread pool from model
         self.result_async = None
         self.is_waiting_for_path = False
         self.shopping_list = shopping_list_generator.generate_shopping_list(self.model.market.articles)
+        self.next_product = None
+        self.in_cart_products = []
+        self.steps_to_wait = 0
 
     def step(self):
         if self.is_checked:
@@ -33,11 +34,19 @@ class Customer(Agent):
             return
 
         if len(self.step_queue) != 0:
-            self.move()
+            if self.steps_to_wait > 0:
+                self.steps_to_wait -= 1
+            else:
+                self.move()
         elif len(self.shopping_list) > 0:
-                next_product_position = self.find_product_position(self.shopping_list.pop(0))
-                self.find_path_async(next_product_position)
-                self.products_number += 1
+            if self.next_product is not None:
+                self.in_cart_products.append(self.next_product)
+
+            self.next_product = self.shopping_list.pop(0)
+            next_product_position = self.find_product_position(self.next_product)
+            self.find_path_async(next_product_position)
+
+            self.steps_to_wait = random.randint(3, 10)
 
         elif self.is_waiting:
             return
@@ -60,9 +69,14 @@ class Customer(Agent):
         pass
 
     def check_up_products(self, n):
-        self.products_number -= n
-        if self.products_number <= 0:
+        products_value = 0.0
+        for i in range(n):
+            if len(self.in_cart_products) != 0:
+                products_value += self.in_cart_products.pop(0).price
+
+        if len(self.in_cart_products) == 0:
             self.finish_shopping()
+        return products_value
 
     def step_forward(self):
         self.pos = (self.x, self.y)

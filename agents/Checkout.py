@@ -14,15 +14,17 @@ class Checkout(Agent):
         self.location = location
         self.served_agent = None
         self.queue_mutex = Lock()
+        self.income = 0.0
         self.queue_end_location = (location[0], location[1] - 1)
 
     def step(self):
-        if self.is_opened:
+        if self.is_opened or self.is_serving or len(self.queue) != 0:
             self.serve_customer()
+
 
     def serve_customer(self):
         if self.is_serving:
-            self.served_agent.check_up_products(1)
+            self.income += self.served_agent.check_up_products(1)
             if self.served_agent.is_checked:
                 self.push_forward_queue_end_location()
                 self.is_serving = False

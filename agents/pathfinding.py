@@ -51,7 +51,7 @@ def compute_astar_shortest_path(graph, start_pos, end_pos, heurestic='distance')
         if current_node == end_node:
             return back_propagate_path(current_node)
 
-        neighbor_nodes = compute_neighborhood(graph, current_node)
+        neighbor_nodes = compute_neighborhood(graph, current_node, hfun)
 
         for neighbor in neighbor_nodes:
 
@@ -90,10 +90,15 @@ def back_propagate_path(current_node):
     return path[::-1]
 
 
-def compute_neighborhood(graph, current_node):
+def compute_neighborhood(graph, current_node, hfun):
     central_point = current_node.position
     neighbors = []
-    for step in [(0, -1), (0, 1), (-1, 0), (1, 0), (1, 1), (-1, -1), (-1, 1), (1, -1)]:
+    possible_steps = [(0, -1), (0, 1), (-1, 0), (1, 0), (1, 1), (-1, -1), (-1, 1), (1, -1)]
+
+    if hfun == 'distance':
+        possible_steps = [(0, -1), (0, 1), (-1, 0), (1, 0)]
+
+    for step in possible_steps:
         new_position = (central_point[0]+step[0], central_point[1]+step[1])
         if is_in_range(new_position, graph):
             if graph[new_position] != 1:

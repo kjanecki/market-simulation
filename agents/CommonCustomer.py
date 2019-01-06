@@ -14,14 +14,17 @@ class CommonCustomer(Customer):
         self.checkout_agent = None
 
     def find_path(self, target_point):
-        self.step_queue = compute_astar_shortest_path(self.model.space_graph, (self.x, self.y), target_point)
-
-    def find_path_async(self, next_product_position):
         h = 'distance'
         if random.randint(0, 2) == 1:
             h = 'manhattan'
+        self.step_queue = compute_astar_shortest_path(self.model.space_graph, (self.x, self.y), target_point, h)
 
-        self.result_async = self.thread_pool.apply_async(compute_astar_shortest_path,
+    def find_path_async(self, next_product_position):
+        h = 'distance'
+        if random.randint(0, 4) == 1:
+            h = 'manhattan'
+
+        self.result_async = self.model.thread_pool.apply_async(compute_astar_shortest_path,
                                                          (self.model.space_graph, (self.x, self.y),
                                                           next_product_position,
                                                           h))
