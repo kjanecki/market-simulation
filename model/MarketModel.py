@@ -144,7 +144,7 @@ class MarketModel(Model):
         self.schedule.remove(agent)
         # self.grid_mutex.release()
 
-
-
+    def get_customers(self):
+        return self.schedule.agents()
 
 
