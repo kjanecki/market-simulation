@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Modelowanie i Symulacja Systemów</title>
+    <meta author="Krzystof Janecki, Marcin Kamiński, Paweł Filiciak">
+</head>
+<link rel="stylesheet" type="text/css" href="./main.css">
+<link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<script src="./main.js"></script>
+
+<body>
+    <iframe id="mesa" src="http://localhost:8521" allowTransparency="true" scrolling="no" height="100%" frameborder="0"></iframe>
+
+    <div class="justify-content-center mt-5">
+        <hr/>
+        <div class="w-100 text-center">
+            <h1>Clients list <i id="refresh" class="material-icons" onClick="refresh();"> refresh </i></h1>
+            <i></i>
+        </div>
+        <table class="table table-hover px-5">
+            <thead>
+                <tr>
+                    <th scope="col-3">ID</th>
+                    <th scope="col-9">Shopping List</th>
+                </tr>
+            </thead>
+            <tbody id="table-body">
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>
