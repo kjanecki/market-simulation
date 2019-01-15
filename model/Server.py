@@ -10,6 +10,8 @@ from agents.Checkout import Checkout
 from agents.ShelfAgent import ShelfAgent
 from model.MarketModel import MarketModel
 
+from model.handlers import CustomersHandler, ColorChangeHandler
+
 article_dictionary = {}
 
 width = 50
@@ -61,7 +63,7 @@ def agent_portrayal(agent):
             portrayal["Color"] = "green"
     else:
         portrayal = {"Shape": "circle",
-                     "Color": "red",
+                     "Color": agent.color,
                      "Filled": "true",
                      "Layer": 0,
                      "r": 0.5}
@@ -85,11 +87,27 @@ grid = CanvasGrid(agent_portrayal, width, height, width * 10, height * 10)
 n_slider = UserSettableParameter('slider', "Number of opened checkouts", 3, 1, len(market.cashRegisters)-1, 1)
 
 
-server = ModularServer(MarketModel,
+buff = []
+customers_handler = ("/users?", CustomersHandler, {"market_buff": buff})
+customer_color_handler = ("/color?", ColorChangeHandler, {"market_buff": buff})
+
+
+class MyServer(ModularServer):
+
+    def __init__(self, buf, model_cls, visualization_elements, name="Mesa Model", model_params={}):
+        self.handlers.append(customers_handler)
+        self.handlers.append(customer_color_handler)
+        super().__init__(model_cls, visualization_elements, name, model_params)
+        self.buffer = buf
+
+
+server = MyServer(buff, MarketModel,
                        [grid, queue_length_chart],
                        "Money Model",
-                       {"max_agents_number": 250,
+                       {"buff": buff,
+                        "max_agents_number": 250,
                         "width": width,
                         "height": height,
                         "market": market,
                         "checkout_slider": n_slider})
+

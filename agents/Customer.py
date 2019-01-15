@@ -23,6 +23,7 @@ class Customer(Agent):
         self.next_product = None
         self.in_cart_products = []
         self.steps_to_wait = 0
+        self.color = "red"
 
     def step(self):
         if self.is_checked:

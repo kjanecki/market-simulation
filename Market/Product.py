@@ -22,6 +22,3 @@ class Product:
 
     def setPrice(self, value):
         self.price = value
-
-    def __str__(self):
-        return "Name: %s, Regal: %d, Price: %f" % (self.name, self.regal, self.price)
