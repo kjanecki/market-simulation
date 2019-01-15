@@ -28,7 +28,7 @@ def gaussian(x, mu, sig):
 
 class MarketModel(Model):
 
-    def __init__(self, max_agents_number, market, checkout_slider, width=50, height=50):
+    def __init__(self, buff, max_agents_number, market, checkout_slider, width=50, height=50):
         self.running = True
         self.market = market
         self.checkout_slider = checkout_slider
@@ -45,7 +45,7 @@ class MarketModel(Model):
         self.place_checkouts()
         self.place_regals()
         self.thread_pool = ThreadPool(20)
-
+        self.customer_list = buff
         self.income_data_collector = DataCollector(
             model_reporters={"total_income": get_income})
 
@@ -59,6 +59,7 @@ class MarketModel(Model):
         self.agents_number += 1
         self.schedule.add(a)
         self.grid.place_agent(a, (a.x, a.y))
+        self.customer_list.append(a)
 
     def place_checkouts(self):
         for checkout_location in self.market.cashRegisters:
@@ -144,7 +145,7 @@ class MarketModel(Model):
         self.schedule.remove(agent)
         # self.grid_mutex.release()
 
-
-
+    def get_customers(self):
+        return self.customer_list
 
 
