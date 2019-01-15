@@ -143,6 +143,8 @@ class MarketModel(Model):
         # self.grid_mutex.acquire()
         self.grid.remove_agent(agent)
         self.schedule.remove(agent)
+        if type(agent) is CommonCustomer:
+            self.customer_list.remove(agent)
         # self.grid_mutex.release()
 
     def get_customers(self):
