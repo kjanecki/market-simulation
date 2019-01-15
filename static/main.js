@@ -6,7 +6,6 @@ function addItemsToTable(items) {
         table.id = 'table-body';
 
         for (var i in items) {
-            console.log(i, items[i]);
             var row = table.insertRow(0);
             var cell1 = row.insertCell(0);
             var cell2 = row.insertCell(1);
