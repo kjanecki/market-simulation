@@ -43,7 +43,6 @@ const addItemsToTable = (items) => {
                 const cell2 = row.insertCell(1);
                 row.id = id;
                 cell1.width = '10%';
-                cell2.width = '50%';
                 cell1.innerHTML = '<button class="btn btn-outline-dark btn-lg uid my-1" onClick = "highlightUser(' + id + ');" >' + id + '</button>';
                 cell2.innerHTML = button + shoppingListHTML;
                 cell2.classList.add('text-center');
