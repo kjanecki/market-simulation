@@ -52,6 +52,4 @@ class AgentCountsHandler(BaseHandler):
         self.set_header('Access-Control-Allow-Methods', 'GET, OPTIONS')
 
     def get(self):
-        agents_arr = self.market_buff[0]
-        mydict = {"arr": agents_arr}
-        self.write(mydict)
+        self.write(self.market_buff[0])

@@ -55,9 +55,7 @@ const addItemsToTable = (items) => {
 const refresh = (callback) => {
     fetch('http://localhost:8521/users', {
         mode: 'cors'
-    }).then((res) => {
-        return res.json();
-    }).then(items => {
+    }).then(res => res.json()).then(items => {
         addItemsToTable(items);
         if (callback) {
             callback(items);
@@ -72,13 +70,12 @@ const setChosenUsersShoppingList = (items, id) => {
 };
 
 const highlightUser = (id, forcedHighlight = false) => {
-    if ((id && id !== currentlyChosenUserID) || forcedHighlight) {
+    if ((id && id !== currentlyChosenUserID) || (forcedHighlight && id)) {
         if (!forcedHighlight) {
             fetch('http://localhost:8521/color?id=' + id, {
                 mode: 'cors'
             });
         }
-        currentlyChosenUserID = currentlyChosenUserID || id;
         document.getElementById(currentlyChosenUserID).classList.remove('highlight-user');
         currentlyChosenUserID = id;
         document.getElementById(currentlyChosenUserID).classList.add('highlight-user');
@@ -86,8 +83,21 @@ const highlightUser = (id, forcedHighlight = false) => {
     }
 }
 
+const setAgentsMapData = (callback) => {
+    fetch('http://localhost:8521/agent_counts', {
+        mode: 'cors'
+    }).then(res => res.json()).then(items => {
+        console.log(items);
+        Plotly.plot(document.getElementById('agents-map-plot'), [{
+            x: [1, 2, 3, 4, 5],
+            y: [1, 2, 4, 8, 16]
+        }]);
+    });
+}
+
 const autoRefresh = (forcedRefresh = false) => {
     if (isAutoRefreshOn || forcedRefresh) {
+        setAgentsMapData();
         refresh((items) => {
             setChosenUsersShoppingList(items, currentlyChosenUserID);
             highlightUser(currentlyChosenUserID, true);

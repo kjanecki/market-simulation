@@ -77,10 +77,19 @@ html, body{
     left: 0;
     top: 0;
     width: 99vw;
-    min-height: 800px;
+    min-height: 100px;
     text-align: center;
     align-items: center;
     justify-items: center;
+}
+
+
+#agents-map-plot{
+    min-height: 250px;
+    height: 300px;
+    width: auto;
+    max-height: 500px;
+    max-width: 100%;
 }
 
 #chosen-user-shopping-list{

@@ -12,11 +12,17 @@
 <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 <script src="./main.js"></script>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 
 <body>
     <iframe id="mesa" class="mb-5" src="http://localhost:8521" allowTransparency="true" scrolling="no" height="100%"
         frameborder="0"></iframe>
-        <hr />
+    <div class="row justify-content-center">
+        <div class="col-6">
+            <div id="agents-map-plot"></div>
+        </div>
+    </div>
+    <hr />
     <div class="row justify-row-center">
         <div class="col-6 text-center border-right mt-3">
             <h1>Client ID:</h1>
@@ -38,9 +44,12 @@
                     </label>
                 </div>
                 <div class="col">
-                        <h4 class="inlin">or</h4></div>
-                        <div class="col">
-                                <h2 class="inline">Manual:</h2><i id="refresh" class="material-icons" onClick="refresh();"> refresh </i></div>
+                    <h4 class="inlin">or</h4>
+                </div>
+                <div class="col">
+                    <h2 class="inline">Manual:</h2><i id="refresh" class="material-icons" onClick="refresh();"> refresh
+                    </i>
+                </div>
             </div>
         </div>
         <table class="table table-hover px-2">
