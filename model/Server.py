@@ -69,19 +69,21 @@ buff = []
 plot_buff = []
 customers_handler = ("/users?", CustomersHandler, {"market_buff": buff})
 customer_color_handler = ("/color?", ColorChangeHandler, {"market_buff": buff})
-customer_color_handler = ("/agent_counts?", AgentCountsHandler, {"market_buff": plot_buff})
+agent_counts_handler = ("/agent_counts?", AgentCountsHandler, {"market_buff": plot_buff})
 
 
 class MyServer(ModularServer):
 
-    def __init__(self, buf, model_cls, visualization_elements, name="Mesa Model", model_params={}):
+    def __init__(self, buf, plot_buff, model_cls, visualization_elements, name="Mesa Model", model_params={}):
         self.handlers.append(customers_handler)
         self.handlers.append(customer_color_handler)
+        self.handlers.append(agent_counts_handler)
         super().__init__(model_cls, visualization_elements, name, model_params)
         self.buffer = buf
+        self.plot_buff = plot_buff
 
 
-server = MyServer(buff, MarketModel,
+server = MyServer(buff, plot_buff, MarketModel,
                        [grid, chart],
                        "Money Model",
                        {"buff": buff,
