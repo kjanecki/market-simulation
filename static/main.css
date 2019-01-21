@@ -125,7 +125,7 @@ html, body{
 
 .visible-list, .visible-list > li{
     display: block;
-    max-height: 1200px;
+    max-height: 10000px;
     opacity: 1;
     transition: max-height 1s ease-in;
     transition: opacity 1s ease-in;
@@ -139,9 +139,4 @@ html, body{
 
 .inline{
     display: inline !important;
-}
-
-.line-height-50{
-    line-height: 50px;
-    vertical-align: center;
 }
