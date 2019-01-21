@@ -14,13 +14,34 @@
 <script src="./main.js"></script>
 
 <body>
-    <iframe id="mesa" class="mb-5" src="http://localhost:8521" allowTransparency="true" scrolling="no" height="100%" frameborder="0"></iframe>
-
+    <iframe id="mesa" class="mb-5" src="http://localhost:8521" allowTransparency="true" scrolling="no" height="100%"
+        frameborder="0"></iframe>
+        <hr />
+    <div class="row justify-row-center">
+        <div class="col-6 text-center border-right mt-3">
+            <h1>Client ID:</h1>
+            <h2 id="chosen-user-id"></h2>
+        </div>
+        <div class="col-6 text-center">
+            <h1>Shopping list:</h1>
+            <ul class="m-0 p-0 text-left" id="chosen-user-shopping-list"></ul>
+        </div>
+    </div>
     <div class="justify-content-center mt-5 mx-auto w-75">
-        <hr/>
         <div class="w-100 text-center">
-            <h1>Clients list <i id="refresh" class="material-icons" onClick="refresh();"> refresh </i></h1>
-            <i></i>
+            <div class="row justify-content-between py-3">
+                <div class="col">
+                    <h2 class="inline">Auto refresh:</h2>
+                    <label class="switch">
+                        <input onChange="toggleAutoRefresh()" type="checkbox">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                <div class="col">
+                        <h4 class="inlin">or</h4></div>
+                        <div class="col">
+                                <h2 class="inline">Manual:</h2><i id="refresh" class="material-icons" onClick="refresh();"> refresh </i></div>
+            </div>
         </div>
         <table class="table table-hover px-2">
             <thead>

@@ -1,6 +1,11 @@
 'use strict';
 
 var currentlyChosenUserID;
+var isAutoRefreshOn = false;
+
+const toggleAutoRefresh = () => {
+    isAutoRefreshOn = !isAutoRefreshOn;
+}
 
 const toggleList = (id) => {
     const element = document.getElementById('shopping-list-' + id);
@@ -11,13 +16,14 @@ const toggleList = (id) => {
     }
 }
 
-const createShoppingList = (list, id) => {
-    const button = '<button class="btn btn-outline-dark btn-sm my-2" onclick="toggleList(' + id + ')">Show list</button>'
-    var shoppingList = '<ul class="list-group list-group-flush mt-2 hidden-list" id="shopping-list-' + id + '">';
-    for (var i = 0; i < list.length; ++i) {
-        shoppingList += '<li class="list-group-item">' + list[i] + '</li>';
+const createShoppingListItems = (list) => {
+    var shoppingListItems = '';
+    if (list) {
+        for (var i = 0; i < list.length; ++i) {
+            shoppingListItems += '<li class="list-group-item">' + list[i] + '</li>';
+        }
     }
-    return button + shoppingList + '</ul>';
+    return shoppingListItems;
 }
 
 const addItemsToTable = (items) => {
@@ -29,6 +35,8 @@ const addItemsToTable = (items) => {
         for (var id in items) {
             const shoppingList = items[id];
             if (shoppingList) {
+                const button = '<button class="btn btn-outline-dark btn-sm my-2" onclick="toggleList(' + id + ')">Show list</button>';
+                const shoppingListHTML = '<ul class="list-group list-group-flush mt-2 hidden-list" id="shopping-list-' + id + '">' + createShoppingListItems(shoppingList) +'</ul>';
                 const row = table.insertRow(0);
                 const cell1 = row.insertCell(0);
                 const cell2 = row.insertCell(1);
@@ -36,7 +44,7 @@ const addItemsToTable = (items) => {
                 cell1.width = '10%';
                 cell2.width = '90%';
                 cell1.innerHTML = '<button class="btn btn-outline-dark btn-lg uid my-1" onClick = "highlightUser(' + id + ');" >' + id + '</button>';
-                cell2.innerHTML = createShoppingList(shoppingList, id);
+                cell2.innerHTML = button + shoppingListHTML;
                 cell2.classList.add('text-center');
             }
         }
@@ -44,12 +52,15 @@ const addItemsToTable = (items) => {
     }
 }
 
-const refresh = () => {
+const refresh = (callback) => {
     fetch('http://localhost:8521/users', {
         mode: 'cors'
     }).then((res) => {
         return res.json();
     }).then(items => {
+        if (callback) {
+            callback(items);
+        };
         addItemsToTable(items);
     }).catch(err => {
         console.error(err);
@@ -65,5 +76,17 @@ const highlightUser = (id) => {
         document.getElementById(currentlyChosenUserID).classList.remove('highlight-user');
         currentlyChosenUserID = id;
         document.getElementById(currentlyChosenUserID).classList.add('highlight-user');
+        document.getElementById('chosen-user-id').innerText = currentlyChosenUserID;
+        autoRefresh(true);
     }
 }
+
+const autoRefresh = (forcedRefresh) => {
+    if (isAutoRefreshOn || forcedRefresh) {
+        refresh((items) => {
+            document.getElementById('chosen-user-shopping-list').innerHTML = createShoppingListItems(items[currentlyChosenUserID]);
+        })
+    }
+}
+
+setInterval(autoRefresh, 5000);
