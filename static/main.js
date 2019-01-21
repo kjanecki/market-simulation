@@ -57,9 +57,9 @@ const refresh = (callback) => {
         mode: 'cors'
     }).then(res => res.json()).then(items => {
         addItemsToTable(items);
-        if (callback) {
-            callback(items);
-        };
+        setChosenUsersShoppingList(items, currentlyChosenUserID);
+        highlightUser(currentlyChosenUserID, true);
+        setAgentsMapData();
     }).catch(err => {
         console.error(err);
     });
@@ -99,11 +99,7 @@ const setAgentsMapData = (callback) => {
 
 const autoRefresh = (forcedRefresh = false) => {
     if (isAutoRefreshOn || forcedRefresh) {
-        setAgentsMapData();
-        refresh((items) => {
-            setChosenUsersShoppingList(items, currentlyChosenUserID);
-            highlightUser(currentlyChosenUserID, true);
-        })
+        refresh();
     }
 }
 
