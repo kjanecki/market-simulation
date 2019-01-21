@@ -1,5 +1,6 @@
 import random
 
+import numpy as np
 from mesa.visualization.UserParam import UserSettableParameter
 from mesa.visualization.modules import CanvasGrid, ChartModule
 from mesa.visualization.ModularVisualization import ModularServer
@@ -10,7 +11,7 @@ from agents.Checkout import Checkout
 from agents.ShelfAgent import ShelfAgent
 from model.MarketModel import MarketModel
 
-from model.handlers import CustomersHandler, ColorChangeHandler
+from model.handlers import CustomersHandler, ColorChangeHandler, AgentCountsHandler
 
 article_dictionary = {}
 
@@ -65,8 +66,10 @@ n_slider = UserSettableParameter('slider', "Number of opened checkouts", 3, 1, l
 
 
 buff = []
+plot_buff = []
 customers_handler = ("/users?", CustomersHandler, {"market_buff": buff})
 customer_color_handler = ("/color?", ColorChangeHandler, {"market_buff": buff})
+customer_color_handler = ("/agent_counts?", AgentCountsHandler, {"market_buff": plot_buff})
 
 
 class MyServer(ModularServer):
@@ -79,12 +82,12 @@ class MyServer(ModularServer):
 
 
 server = MyServer(buff, MarketModel,
-                       [grid, queue_length_chart],
+                       [grid, chart],
                        "Money Model",
                        {"buff": buff,
+                        "plot_buff": plot_buff,
                         "max_agents_number": 250,
                         "width": width,
                         "height": height,
                         "market": market,
                         "checkout_slider": n_slider})
-

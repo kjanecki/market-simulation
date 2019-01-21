@@ -15,7 +15,7 @@ from agents.ShelfAgent import ShelfAgent
 
 
 def get_income(model):
-    return sum([checkout.income for checkout in model.opened_checkouts])/(model.schedule.steps+1)
+    return model.total_income
 
 
 def compute_average_queue_size(model):
@@ -26,9 +26,15 @@ def gaussian(x, mu, sig):
     return np.exp(-np.power(x - mu, 2.) / (2 * np.power(sig, 2.)))
 
 
+def get_agent_counts(model):
+    return model.agent_counts
+
+
 class MarketModel(Model):
 
-    def __init__(self, buff, max_agents_number, market, checkout_slider, width=50, height=50):
+    def __init__(self, buff, plot_buff, max_agents_number, market, checkout_slider, width=50, height=50, steps=3000):
+        self.steps = steps
+        self.plot_buff = plot_buff
         self.running = True
         self.market = market
         self.checkout_slider = checkout_slider
@@ -46,6 +52,11 @@ class MarketModel(Model):
         self.place_regals()
         self.thread_pool = ThreadPool(20)
         self.customer_list = buff
+        self.total_income = 0.0
+        self.agent_counts = [[0 for x in range(self.grid.width)] for y in range(self.grid.height)]
+        self.plot_buff.append(self.agent_counts)
+        self.plot_buff.append(self.grid.width)
+        self.plot_buff.append(self.grid.height)
         self.income_data_collector = DataCollector(
             model_reporters={"total_income": get_income})
 
@@ -141,6 +152,8 @@ class MarketModel(Model):
 
     def move_agent(self, agent, new_pos):
         # self.grid_mutex.acquire()
+        self.agent_counts[new_pos[0]][new_pos[1]] += 1
+        self.plot_buff[0] = self.agent_counts
         self.grid.move_agent(agent, new_pos)
         # self.grid_mutex.release()
 

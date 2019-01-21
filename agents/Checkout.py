@@ -25,6 +25,7 @@ class Checkout(Agent):
     def serve_customer(self):
         if self.is_serving:
             self.income += self.served_agent.check_up_products(1)
+            self.model.total_income += self.served_agent.check_up_products(1)
             if self.served_agent.is_checked:
                 self.push_forward_queue_end_location()
                 self.is_serving = False
