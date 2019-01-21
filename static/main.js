@@ -76,6 +76,7 @@ const highlightUser = (id, forcedHighlight = false) => {
                 mode: 'cors'
             });
         }
+        currentlyChosenUserID = currentlyChosenUserID || id;
         document.getElementById(currentlyChosenUserID).classList.remove('highlight-user');
         currentlyChosenUserID = id;
         document.getElementById(currentlyChosenUserID).classList.add('highlight-user');
@@ -86,12 +87,13 @@ const highlightUser = (id, forcedHighlight = false) => {
 const setAgentsMapData = (callback) => {
     fetch('http://localhost:8521/agent_counts', {
         mode: 'cors'
-    }).then(res => res.json()).then(items => {
-        console.log(items);
-        Plotly.plot(document.getElementById('agents-map-plot'), [{
-            x: [1, 2, 3, 4, 5],
-            y: [1, 2, 4, 8, 16]
-        }]);
+    }).then(res => res.json()).then(dataArrays => {
+        var data = [{
+            z: dataArrays.z,
+            colorscale: 'Bluered',
+            type: 'heatmap'
+        }];
+        Plotly.newPlot(document.getElementById('agents-map-plot'), data);
     });
 }
 
