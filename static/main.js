@@ -1,5 +1,6 @@
 'use strict';
 
+var data = {};
 var currentlyChosenUserID;
 var isAutoRefreshOn = false;
 
@@ -36,13 +37,13 @@ const addItemsToTable = (items) => {
             const shoppingList = items[id];
             if (shoppingList) {
                 const button = '<button class="btn btn-outline-dark btn-sm my-2" onclick="toggleList(' + id + ')">Show list</button>';
-                const shoppingListHTML = '<ul class="list-group list-group-flush mt-2 hidden-list" id="shopping-list-' + id + '">' + createShoppingListItems(shoppingList) +'</ul>';
+                const shoppingListHTML = '<ul class="list-group list-group-flush mt-2 hidden-list" id="shopping-list-' + id + '">' + createShoppingListItems(shoppingList) + '</ul>';
                 const row = table.insertRow(0);
                 const cell1 = row.insertCell(0);
                 const cell2 = row.insertCell(1);
                 row.id = id;
                 cell1.width = '10%';
-                cell2.width = '90%';
+                cell2.width = '50%';
                 cell1.innerHTML = '<button class="btn btn-outline-dark btn-lg uid my-1" onClick = "highlightUser(' + id + ');" >' + id + '</button>';
                 cell2.innerHTML = button + shoppingListHTML;
                 cell2.classList.add('text-center');
@@ -58,35 +59,41 @@ const refresh = (callback) => {
     }).then((res) => {
         return res.json();
     }).then(items => {
+        addItemsToTable(items);
         if (callback) {
             callback(items);
         };
-        addItemsToTable(items);
     }).catch(err => {
         console.error(err);
     });
 }
 
-const highlightUser = (id) => {
-    if (id && id !== currentlyChosenUserID) {
-        fetch('http://localhost:8521/color?id=' + id, {
-            mode: 'cors'
-        });
+const setChosenUsersShoppingList = (items, id) => {
+    document.getElementById('chosen-user-shopping-list').innerHTML = createShoppingListItems(items[id]);
+};
+
+const highlightUser = (id, forcedHighlight = false) => {
+    if ((id && id !== currentlyChosenUserID) || forcedHighlight) {
+        if (!forcedHighlight) {
+            fetch('http://localhost:8521/color?id=' + id, {
+                mode: 'cors'
+            });
+        }
         currentlyChosenUserID = currentlyChosenUserID || id;
         document.getElementById(currentlyChosenUserID).classList.remove('highlight-user');
         currentlyChosenUserID = id;
         document.getElementById(currentlyChosenUserID).classList.add('highlight-user');
         document.getElementById('chosen-user-id').innerText = currentlyChosenUserID;
-        autoRefresh(true);
     }
 }
 
-const autoRefresh = (forcedRefresh) => {
+const autoRefresh = (forcedRefresh = false) => {
     if (isAutoRefreshOn || forcedRefresh) {
         refresh((items) => {
-            document.getElementById('chosen-user-shopping-list').innerHTML = createShoppingListItems(items[currentlyChosenUserID]);
+            setChosenUsersShoppingList(items, currentlyChosenUserID);
+            highlightUser(currentlyChosenUserID, true);
         })
     }
 }
 
-setInterval(autoRefresh, 5000);
+setInterval(autoRefresh, 3000);
