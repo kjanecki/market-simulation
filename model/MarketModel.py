@@ -10,7 +10,7 @@ from mesa.time import RandomActivation
 from mesa.space import MultiGrid
 
 from agents.Checkout import Checkout
-from agents.CommonCustomer import CommonCustomer
+from agents.CommonCustomer import CommonCustomer, LazyCustomer
 from agents.ShelfAgent import ShelfAgent
 
 
@@ -55,7 +55,12 @@ class MarketModel(Model):
         self.open_checkouts()
 
     def add_agent(self):
-        a = CommonCustomer(self.agents_number, self, self.market.articles)
+        i = random.randint(0, 1)
+        if i == 0:
+            a = CommonCustomer(self.agents_number, self, self.market.articles)
+        else:
+            a = LazyCustomer(self.agents_number, self, self.market.articles)
+        # a = CommonCustomer(self.agents_number, self, self.market.articles)
         self.agents_number += 1
         self.schedule.add(a)
         self.grid.place_agent(a, (a.x, a.y))

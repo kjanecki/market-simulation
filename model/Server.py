@@ -17,29 +17,6 @@ article_dictionary = {}
 width = 50
 height = 50
 
-regals = {}
-regal_no = 0
-
-for j in range(8, 50, 6):
-    for i in range(5, 20):
-        regals[str(regal_no)] = Shelf(regal_no, (i, j))
-        regal_no += 1
-        regals[str(regal_no)] = Shelf(regal_no, (i, j - 1))
-        regal_no += 1
-
-    for i in range(30, 45):
-        regals[str(regal_no)] = Shelf(regal_no, (i, j))
-        regal_no += 1
-        regals[str(regal_no)] = Shelf(regal_no, (i, j - 1))
-        regal_no += 1
-
-for i in range(100):
-    article_dictionary[str(i)] = random.randint(0, regal_no - 1)
-
-checkouts = []
-for i in range(4, 48, 3):
-    checkouts.append((width - 1, i))
-
 market = DataManager.initialize_market()
 
 

@@ -19,7 +19,9 @@ class Customer(Agent):
         self.pos = (self.x, self.y)
         self.result_async = None
         self.is_waiting_for_path = False
-        self.shopping_list = shopping_list_generator.generate_shopping_list(self.model.market.articles)
+        self.shopping_list_generator = shopping_list_generator
+        self.shopping_list = []
+        self.generate_shopping_list()
         self.next_product = None
         self.in_cart_products = []
         self.steps_to_wait = 0
@@ -61,6 +63,9 @@ class Customer(Agent):
         pass
 
     def find_path(self, next_product_position):
+        pass
+
+    def generate_shopping_list(self):
         pass
 
     def move(self):

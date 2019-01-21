@@ -1,8 +1,14 @@
 import xlrd
-from random import randint
+from random import randint, shuffle
+
 from Market.Product import Product
 
 class ShoppingListGenerator:
+
+
+    def __init__(self, market):
+        self.market = market
+
     def generate_shopping_lists(self, number=100):
         products = self._get_products()
         shopping_lists = []
@@ -12,7 +18,7 @@ class ShoppingListGenerator:
 
         return shopping_lists
 
-    def generate_shopping_list(self, products):
+    def generate_shopping_list(self, products, doCluster=False):
         shopping_list = []
         money_limit = 1000
         number_of_items = randint(5, 30)
@@ -21,7 +27,11 @@ class ShoppingListGenerator:
             list_item = products[randint(0, len(products)-1)]
             if money_limit - list_item.price - 100 > 0:
                 shopping_list.append(list_item)
-        return shopping_list
+
+        if doCluster:
+            return self.cluster(shopping_list)
+        else:
+            return shopping_list
 
     def _get_list_item(self, products):
         list_item = {'id': 0, 'price': 0}
@@ -48,3 +58,19 @@ class ShoppingListGenerator:
             products.append(product)
 
         return products
+
+    def cluster(self, shopping_list):
+        buckets = []
+        final_shopping_list = []
+        for i in range(len(self.market.regals)+1):
+            buckets.append([])
+
+        for product in shopping_list:
+            buckets[product.departament].append(product)
+
+        shuffle(buckets)
+
+        while len(buckets) != 0:
+            final_shopping_list += buckets.pop(0)
+
+        return final_shopping_list

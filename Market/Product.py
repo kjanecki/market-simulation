@@ -6,6 +6,7 @@ class Product:
         self.name = name
         self.regal = regal
         self.price = price
+        self.departament = 0
 
     def setValue(self):
         return {
@@ -22,3 +23,6 @@ class Product:
 
     def setPrice(self, value):
         self.price = value
+
+    def setDepartament(self, departament):
+        self.departament = departament

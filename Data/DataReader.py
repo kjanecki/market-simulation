@@ -6,7 +6,7 @@ from Market.Market import Market
 
 class DataReader:
 
-    def initialize_market(self, path, products_number=200, regals_number=14, regal_size=(15, 2)):
+    def initialize_market(self, path, products_number=200, regals_number=14, regal_size=(15, 5)):
         book = xlrd.open_workbook(path)
         sh = book.sheet_by_index(0)
         col_name = ['name', 'regal', 'price']
@@ -23,6 +23,7 @@ class DataReader:
             added = False
             for regal in regals:
                 if regal.number == product.regal:
+                    product.setDepartament(regal.number)
                     regal.add_product(product)
                     added = True
 
@@ -37,9 +38,16 @@ class DataReader:
 
     def initialize_regal_list(self, regals_number, regal_size):
         regals = []
-        locations = [(5, 7), (5, 13), (5, 19), (5, 25), (5, 31), (5, 37), (5, 43),
-                     (30, 7), (30, 13), (30, 19), (30, 25), (30, 31), (30, 37), (30, 43)]
+        locations = [(5, 8), (5, 14), (5, 20), (5, 26), (5, 32), (5, 38), (5, 44),
+                     (30, 8), (30, 14), (30, 20), (30, 26), (30, 32), (30, 38), (30, 44)]
 
         for i in range(regals_number):
+            print(i)
             regals.append(Regal(i+1, locations[i], regal_size))
+
+        regals.append(Regal(len(regals)+1, (5, 7), (15, 0), type="single", direction="S"))
+        regals.append(Regal(len(regals)+1, (30, 7), (15, 0), type="single", direction="S"))
+
         return regals
+
+1

@@ -8,7 +8,7 @@ from agents.pathfinding import compute_astar_shortest_path
 class CommonCustomer(Customer):
 
     def __init__(self, unique_id, model, articles):
-        super().__init__(unique_id, model, articles, ShoppingListGenerator())
+        super().__init__(unique_id, model, articles, ShoppingListGenerator(model.market))
         self.next_article = ()
         self.is_near_checkouts = False
         self.checkout_agent = None
@@ -55,4 +55,22 @@ class CommonCustomer(Customer):
                 chosen_checkout = checkout
 
         self.checkout_agent = chosen_checkout
+
+    def generate_shopping_list(self):
+        self.shopping_list = self.shopping_list_generator.generate_shopping_list(self.model.market.articles, True)
+
+
+class LazyCustomer(CommonCustomer):
+
+    def __init__(self, unique_id, model, articles):
+        super().__init__(unique_id, model, articles)
+        self.delay = 1
+
+    def generate_shopping_list(self):
+        self.shopping_list = self.shopping_list_generator.generate_shopping_list(self.model.market.articles, False)
+
+    def move(self):
+        self.delay = (self.delay + 1) % 2
+        if self.delay == 0:
+            super().move()
 
