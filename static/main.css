@@ -32,3 +32,23 @@ html, body{
 @-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
 @keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
 
+.hidden-list, .hidden-list > li{
+    display: none;
+    background: transparent !important;
+    max-height: 0;
+    opacity: 0;
+    transition: max-height opacity 0.5s ease-out;
+}
+
+.visible-list, .visible-list > li{
+    display: block;
+    max-height: 1000px;
+    opacity: 1;
+    transition: max-height 1s ease-in;
+}
+
+.highlight-user{
+    background: #F8F8F8;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #FFFFFF, #e4f1fe, #FFFFFF);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #FFFFFF, #e4f1fe, #FFFFFF); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
