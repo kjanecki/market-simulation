@@ -83,6 +83,7 @@ class MarketModel(Model):
             self.agents_number += 1
             self.grid.place_agent(checkout_agent, checkout_location)
             self.checkout_agents.append(checkout_agent)
+            self.space_graph[checkout_location[0], checkout_location[1]] = 1
         self.closed_checkouts = self.checkout_agents
 
     def place_regals(self):
@@ -128,6 +129,16 @@ class MarketModel(Model):
                                              ((x.location[0] - location[0]) ** 2) +
                                              ((x.location[1] - location[1]) ** 2)))
         return ordered_list[0:]
+
+    def generate_random_starting_pos(self):
+        pos_list = [(self.grid.width//2 + 1, 0), (self.grid.width-1, 1), (self.grid.width-1, self.grid.height-2)]
+        i = random.randint(0, len(pos_list)-1)
+        pos = pos_list[i]
+
+        if i == 0:
+            pos = (pos_list[0][0] + random.randint(-2,2), pos_list[0][1])
+
+        return pos
 
     def step(self):
         print(self.checkout_slider)

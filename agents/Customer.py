@@ -11,8 +11,11 @@ class Customer(Agent):
     def __init__(self, unique_id, model, articles, shopping_list_generator):
         super().__init__(unique_id, model)
         self.articles = articles
-        self.x = model.grid.width//2 + 1
-        self.y = 0
+
+        p = model.generate_random_starting_pos()
+
+        self.x = p[0]
+        self.y = p[1]
         self.step_queue = []
         self.is_waiting = False
         self.is_checked = False

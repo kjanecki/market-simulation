@@ -90,7 +90,7 @@ const setAgentsMapData = (callback) => {
     }).then(res => res.json()).then(dataArrays => {
         var data = [{
             z: dataArrays.z,
-            colorscale: 'Bluered',
+            colorscale: 'Portland',
             type: 'heatmap'
         }];
         Plotly.newPlot(document.getElementById('agents-map-plot'), data);

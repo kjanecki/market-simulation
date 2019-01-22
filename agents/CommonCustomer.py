@@ -21,7 +21,7 @@ class CommonCustomer(Customer):
 
     def find_path_async(self, next_product_position):
         h = 'distance'
-        if random.randint(0, 4) == 1:
+        if random.randint(0, 1) == 1:
             h = 'manhattan'
 
         self.result_async = self.model.thread_pool.apply_async(compute_astar_shortest_path,

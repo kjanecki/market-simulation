@@ -84,7 +84,7 @@ class MyServer(ModularServer):
 
 
 server = MyServer(buff, plot_buff, MarketModel,
-                       [grid, chart],
+                       [grid, queue_length_chart],
                        "Money Model",
                        {"buff": buff,
                         "plot_buff": plot_buff,

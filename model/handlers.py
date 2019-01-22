@@ -1,4 +1,4 @@
-
+import numpy as np
 import tornado
 
 
@@ -51,4 +51,4 @@ class AgentCountsHandler(BaseHandler):
         self.set_header('Access-Control-Allow-Methods', 'GET, OPTIONS')
 
     def get(self):
-        self.write({"z": self.market_buff[0]})
+        self.write({"z": [list(i) for i in zip(*self.market_buff[0])]})
